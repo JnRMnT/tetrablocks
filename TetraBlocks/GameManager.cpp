@@ -2,30 +2,30 @@
 
 GameManager::GameManager()
 {
-	timer = new Timer();
+	grid = new Grid();
 }
-
 
 GameManager::~GameManager()
 {
 	delete grid;
 	grid = nullptr;
 	state = Paused;
-	delete timer;
 }
 
 void GameManager::StartGame() 
 {
-	grid = new Grid();
 	state = Playing;
-	if (timer->isStarted())
-	{
-		timer->stop();
-	}
+	intervalHandler->StartTimer();
+}
 
-	timer->start();
+void GameManager::PauseGame()
+{
+	this->intervalHandler->PauseTimer();
+}
 
-
+void GameManager::SetIntervalHandler(IntervalHandler* intervalHandler)
+{
+	this->intervalHandler = intervalHandler;
 }
 
 bool GameManager::IsPlaying()

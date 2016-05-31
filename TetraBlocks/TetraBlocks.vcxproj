@@ -140,6 +140,7 @@
     <ClInclude Include="Player.h" />
     <ClInclude Include="RenderingHelper.h" />
     <ClInclude Include="RotationHelper.h" />
+    <ClInclude Include="IntervalHandler.h" />
     <ClInclude Include="Timer.h" />
   </ItemGroup>
   <ItemGroup>
@@ -153,6 +154,7 @@
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="RenderingHelper.cpp" />
     <ClCompile Include="RotationHelper.cpp" />
+    <ClCompile Include="IntervalHandler.cpp" />
     <ClCompile Include="Timer.cpp" />
   </ItemGroup>
   <ItemGroup>

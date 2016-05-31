@@ -7,6 +7,7 @@
 #include "Constants.h"
 #include "Player.h"
 #include "InputHandler.h"
+#include "IntervalHandler.h"
 
 //Starts up SDL and creates window
 bool init();
@@ -28,6 +29,7 @@ SDL_Texture* gTexture = NULL;
 
 GameManager* game_manager = NULL;
 Player* player = NULL;
+IntervalHandler* intervalHandler = NULL;
 
 bool init()
 {
@@ -110,6 +112,10 @@ void close()
 	//Quit SDL subsystems
 	IMG_Quit();
 	SDL_Quit();
+
+	free(game_manager);
+	free(player);
+	free(intervalHandler);
 }
 
 int main(int argc, char* args[])
@@ -134,12 +140,16 @@ int main(int argc, char* args[])
 			//Event handler
 			SDL_Event e;
 			game_manager = new GameManager();
-			game_manager->StartGame();
-
 			player = new Player(game_manager->GetGridInstance());
+			intervalHandler = new IntervalHandler(game_manager, player);
+
 
 			player->ActiveBlock = new Block(5, 5, L, player->rotationHelper, game_manager->GetGridInstance());
 			game_manager->GetGridInstance()->AddBlock(player->ActiveBlock);
+			game_manager->SetIntervalHandler(intervalHandler);
+
+			// Start the Game
+			game_manager->StartGame();
 
 			//While application is running
 			while (!quit)
@@ -165,6 +175,8 @@ int main(int argc, char* args[])
 					{
 						//Move the active block
 					}
+
+					intervalHandler->Update();
 				}
 
 
@@ -172,48 +184,8 @@ int main(int argc, char* args[])
 				SDL_SetRenderDrawColor(gRenderer, 0xFF, 0xFF, 0xFF, 0xFF);
 				SDL_RenderClear(gRenderer);
 
-				/*
-				//Top left corner viewport
-				SDL_Rect leftViewport;
-				leftViewport.x = 0;
-				leftViewport.y = 0;
-				leftViewport.w = SCREEN_WIDTH / 4 * 3;
-				leftViewport.h = SCREEN_HEIGHT;
-				SDL_RenderSetViewport(gRenderer, &leftViewport);
-				*/
+				
 				game_manager->GetGridInstance()->Render(gRenderer);
-
-				/*
-				//Render texture to screen
-				SDL_RenderCopy(gRenderer, gTexture, NULL, NULL);
-
-
-				//Top right viewport
-				SDL_Rect topRightViewport;
-				topRightViewport.x = SCREEN_WIDTH / 2;
-				topRightViewport.y = 0;
-				topRightViewport.w = SCREEN_WIDTH / 2;
-				topRightViewport.h = SCREEN_HEIGHT / 2;
-				SDL_RenderSetViewport(gRenderer, &topRightViewport);
-
-				//Render texture to screen
-				SDL_RenderCopy(gRenderer, gTexture, NULL, NULL);
-
-
-				//Bottom viewport
-				SDL_Rect bottomViewport;
-				bottomViewport.x = 0;
-				bottomViewport.y = SCREEN_HEIGHT / 2;
-				bottomViewport.w = SCREEN_WIDTH;
-				bottomViewport.h = SCREEN_HEIGHT / 2;
-				SDL_RenderSetViewport(gRenderer, &bottomViewport);
-
-
-				//Render texture to screen
-				SDL_RenderCopy(gRenderer, gTexture, NULL, NULL);
-
-
-				*/
 
 				//Update screen
 				SDL_RenderPresent(gRenderer);

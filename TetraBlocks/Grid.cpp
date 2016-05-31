@@ -78,7 +78,7 @@ Uint16 Grid::GetPartialStatus(int i, int j, Uint16 currentState)
 	}
 	else
 	{
-		std::bitset<16> status =  0x0000;
+		std::bitset<16> status = 0x0000;
 		for (int y = 0; y < 4; y++)
 		{
 			for (int x = 0; x < 4; x++)
@@ -99,7 +99,8 @@ void Grid::Render(SDL_Renderer* gRenderer)
 	if (grid != nullptr) {
 		int offsetX = 0;
 		int offsetY = 0;
-		SDL_Rect draw_rect = { 0, 0, SCREEN_WIDTH / 5 * 3 / grid_width, SCREEN_HEIGHT / grid_height };
+		int cellSize = SCREEN_HEIGHT / grid_height;
+		SDL_Rect draw_rect = { 0, 0, cellSize, cellSize };
 
 		for (int i = 0; i < grid_height; i++) {
 			offsetX = 0;

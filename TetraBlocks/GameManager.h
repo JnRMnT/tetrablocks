@@ -2,7 +2,9 @@
 #include "Grid.h"
 #include "GameState.h"
 #include "Timer.h"
+#include "IntervalHandler.h"
 
+class IntervalHandler;
 class GameManager
 {
 public:
@@ -11,10 +13,11 @@ public:
 	void StartGame();
 	void PauseGame();
 	bool IsPlaying();
+	void SetIntervalHandler(IntervalHandler* intervalHandler);
 	Grid* GetGridInstance();
 private:
 	Grid* grid;
-	Timer* timer;
 	GameState state;
+	IntervalHandler* intervalHandler;
 };
 

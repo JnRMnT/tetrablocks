@@ -4,8 +4,8 @@
 #include <SDL.h>
 #include <SDL_image.h>
 
-#define grid_width 10
-#define grid_height 20
+#define grid_width 20
+#define grid_height 30
 
 class Block;
 class Grid
