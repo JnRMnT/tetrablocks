@@ -78,19 +78,19 @@ Uint16 Grid::GetPartialStatus(int i, int j, Uint16 currentState)
 	}
 	else
 	{
-		Uint16 status = 0x0000;
+		std::bitset<16> status =  0x0000;
 		for (int y = 0; y < 4; y++)
 		{
 			for (int x = 0; x < 4; x++)
 			{
 				if (grid[i + y][j + x]->GetStatus() != Empty && !currentBitSet.test(15 - (y * 4 + x)))
 				{
-					status = status | (0x0001 << (16 - (y * 4 + x + 1)));
+					status.set(15 - (y * 4 + x));
 				}
 			}
 		}
 
-		return status;
+		return status.to_ullong();
 	}
 }
 

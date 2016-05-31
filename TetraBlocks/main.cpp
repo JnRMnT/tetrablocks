@@ -138,7 +138,7 @@ int main(int argc, char* args[])
 
 			player = new Player(game_manager->GetGridInstance());
 
-			player->ActiveBlock = new Block(5, 5, Z, player->rotationHelper, game_manager->GetGridInstance());
+			player->ActiveBlock = new Block(5, 5, L, player->rotationHelper, game_manager->GetGridInstance());
 			game_manager->GetGridInstance()->AddBlock(player->ActiveBlock);
 
 			//While application is running

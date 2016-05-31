@@ -6,7 +6,7 @@ RotationHelper::RotationHelper()
 {
 	Uint16 I_state_list[4] = { 0x4444, 0x0F00, 0x2222, 0x00F0 };
 	Uint16 J_state_list[4] = { 0x44C0, 0x8E00, 0x6440, 0x0E20 };
-	Uint16 L_state_list[4] = { 0x4460, 0x0Ea0, 0XC440, 0X2E00 };
+	Uint16 L_state_list[4] = { 0x4460, 0xE800, 0XC440, 0X2E00 };
 	Uint16 O_state_list[4] = { 0xCC00, 0xCC00, 0xCC00, 0xCC00 };
 	Uint16 S_state_list[4] = { 0x06C0, 0x8C40, 0x6C00, 0x4620 };
 	Uint16 T_state_list[4] = { 0x0E40, 0x4C40, 0x4E00, 0x4640 };
@@ -87,12 +87,17 @@ Uint16 RotationHelper::GetNext(BlockType blockType, Uint16 currentState)
 Uint16 RotationHelper::GetPrevious(BlockType blockType, Uint16 currentState)
 {
 	int currentIndex = GetStateIndex(blockType, currentState);
-	int newIndex = (currentIndex - 1) % 4;
+	int newIndex = currentIndex - 1;
+	if (newIndex < 0)
+	{
+		newIndex += 4;
+	}
+
 	return GetBlockState(blockType, newIndex);
 }
 
 bool RotationHelper::CanRotateTo(Grid* grid, Block* block, Uint16 state)
 {
 	Uint16 partial_status = grid->GetPartialStatus(block->GetCenterY(), block->GetCenterX(), block->GetState());
-	return (~partial_status) & block->GetState() == 0x00;
+	return (~partial_status) & block->GetState() == block->GetState();
 }

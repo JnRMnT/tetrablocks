@@ -2,15 +2,19 @@
 
 void InputHandler::HandleInput(SDL_Event e, Player* player)
 {
-	switch (e.key.keysym.scancode)
+	if (e.type == SDL_KEYUP) 
 	{
-	case SDL_SCANCODE_RIGHT:
-		player->ActiveBlock->Rotate(Right);
-		break;
-	case SDL_SCANCODE_LEFT:
-		player->ActiveBlock->Rotate(Left);
-		break;
-	default:
-		break;
+		//Only Handle Key Up Events
+		switch (e.key.keysym.scancode)
+		{
+		case SDL_SCANCODE_RIGHT:
+			player->ActiveBlock->Rotate(Right);
+			break;
+		case SDL_SCANCODE_LEFT:
+			player->ActiveBlock->Rotate(Left);
+			break;
+		default:
+			break;
+		}
 	}
 }
