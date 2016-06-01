@@ -38,7 +38,7 @@ void Block::Move(Direction movement)
 
 	if (CanMove(newCenterX, newCenterY))
 	{
-		grid->UpdateBlock(newCenterY, newCenterX, grid->GetPartialStatus(newCenterY, newCenterX, state), state, this);
+		grid->UpdateBlock(center_y, center_x, grid->GetPartialStatus(newCenterY, newCenterX, state), newCenterY, newCenterX, state, state, this);
 		this->center_x = newCenterX;
 		this->center_y = newCenterY;
 	}
@@ -63,7 +63,7 @@ void Block::Rotate(Direction direction)
 
 	if (rotationHelper->CanRotateTo(grid, this, nextState))
 	{
-		grid->UpdateBlock(center_y, center_x, state, nextState, this);
+		grid->UpdateBlock(center_y, center_x, state, center_y, center_x, state, nextState, this);
 		state = nextState;
 	}
 }

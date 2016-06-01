@@ -18,6 +18,6 @@ private:
 	Timer* timer;
 	GameManager* gameManager;
 	Player* player;
-	int blockMovementInterval;
+	Uint32 blockMovementInterval;
 };
 

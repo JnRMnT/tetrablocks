@@ -3,7 +3,6 @@
 #include "Constants.h"
 #include <stdlib.h>
 #include "Block.h"
-#include <bitset>
 
 Grid::Grid()
 {
@@ -45,9 +44,9 @@ void Grid::AddBlock(Block* block)
 	}
 }
 
-void Grid::UpdateBlock(int i, int j, Uint16 currentState, Uint16 nextState, Block* block)
+void Grid::UpdateBlock(int i, int j, Uint16 gridState, int nextI, int nextJ, Uint16 currentState, Uint16 nextState, Block* block)
 {
-	std::bitset<16> currentBitSet = std::bitset<16>(currentState);
+	std::bitset<16> currentBitSet = std::bitset<16>(gridState);
 	std::bitset<16> nextBitSet = std::bitset<16>(nextState);
 	for (int y = 0; y < 4; y++)
 	{
@@ -59,13 +58,56 @@ void Grid::UpdateBlock(int i, int j, Uint16 currentState, Uint16 nextState, Bloc
 
 			if (currentCellFilled && !nextCellFilled)
 			{
-				grid[i + y][j + x]->SetStatus(Empty);
+				grid[nextI + y][nextJ + x]->SetStatus(Empty);
 			}
 			else if (!currentBitSet.test(bit_pos) && nextCellFilled)
 			{
-				grid[i + y][j + x]->SetStatus(block->GetStatusEquivalent());
+				grid[nextI + y][nextJ + x]->SetStatus(block->GetStatusEquivalent());
 			}
 		}
+	}
+
+	if (currentState == nextState)
+	{
+		//Movement
+		if (nextJ != j)
+		{
+			//Horizontal Movement
+			if (nextJ > j)
+			{
+				//Going Right, Check 3rd, 7th, 11th and 15th bits
+				CheckStateAndEmptyCells(currentState, i, j, 3);
+				CheckStateAndEmptyCells(currentState, i, j, 7);
+				CheckStateAndEmptyCells(currentState, i, j, 11);
+				CheckStateAndEmptyCells(currentState, i, j, 15);
+			}
+			else
+			{
+				//Going Left, Check 0th, 4th, 8th and 12th bits
+				CheckStateAndEmptyCells(currentState, i, j, 0);
+				CheckStateAndEmptyCells(currentState, i, j, 4);
+				CheckStateAndEmptyCells(currentState, i, j, 8);
+				CheckStateAndEmptyCells(currentState, i, j, 12);
+			}
+		}
+		else
+		{
+			//Vertical Movement - Going Down, Check 12th, 13th, 14th and 15th bits
+			CheckStateAndEmptyCells(currentState, i, j, 12);
+			CheckStateAndEmptyCells(currentState, i, j, 13);
+			CheckStateAndEmptyCells(currentState, i, j, 14);
+			CheckStateAndEmptyCells(currentState, i, j, 15);
+		}
+	}
+}
+
+void Grid::CheckStateAndEmptyCells(std::bitset<16> state, int y, int x, int bitToCheck)
+{
+	if (state.test(bitToCheck))
+	{
+		int i = (15 - bitToCheck) / 4;
+		int j = (15 - bitToCheck) % 4;
+		this->grid[y + i][x + j]->SetStatus(Empty);
 	}
 }
 
@@ -138,4 +180,9 @@ bool Grid::IsInBounds(int x, int y, Uint16 testState)
 	}
 
 	return inBounds;
+}
+
+bool Grid::IsOccupied(int i, int j)
+{
+	return this->grid[i][j]->GetStatus() != Empty;
 }
