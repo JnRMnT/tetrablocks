@@ -126,7 +126,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="InputHandler.h" />
-    <ClInclude Include="Rotation.h" />
+    <ClInclude Include="Direction.h" />
     <ClInclude Include="Block.h" />
     <ClInclude Include="BlockType.h" />
     <ClInclude Include="Cell.h" />

@@ -16,7 +16,40 @@ Block::~Block()
 {
 }
 
-void Block::Rotate(Rotation direction)
+void Block::Move(Direction movement)
+{
+	int newCenterX = this->center_x;
+	int newCenterY = this->center_y;
+
+	switch (movement)
+	{
+	default:
+		break;
+	case Left:
+		newCenterX--;
+		break;
+	case Right:
+		newCenterX++;
+		break;
+	case Down:
+		newCenterY++;
+		break;
+	}
+
+	if (CanMove(newCenterX, newCenterY))
+	{
+		grid->UpdateBlock(newCenterY, newCenterX, grid->GetPartialStatus(newCenterY, newCenterX, state), state, this);
+		this->center_x = newCenterX;
+		this->center_y = newCenterY;
+	}
+}
+
+bool Block::CanMove(int x, int y)
+{
+	return grid->IsInBounds(x, y, state);
+}
+
+void Block::Rotate(Direction direction)
 {
 	Uint16 nextState;
 	if (direction == Left)

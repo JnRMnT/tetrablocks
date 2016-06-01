@@ -1,6 +1,6 @@
 #pragma once
 #include "RotationHelper.h"
-#include "Rotation.h"
+#include "Direction.h"
 #include "Grid.h"
 
 class Grid;
@@ -10,7 +10,8 @@ class Block
 public:
 	Block(int center_x, int center_y, BlockType type, RotationHelper* rotationHelper, Grid* grid);
 	~Block();
-	void Rotate(Rotation direction);
+	void Rotate(Direction direction);
+	void Move(Direction movement);
 	CellStatus GetStatusEquivalent();
 	int GetCenterX();
 	int GetCenterY();
@@ -22,4 +23,5 @@ private:
 	Uint16 state;
 	RotationHelper* rotationHelper;
 	Grid* grid;
+	bool CanMove(int x, int y);
 };

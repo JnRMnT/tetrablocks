@@ -72,26 +72,24 @@ void Grid::UpdateBlock(int i, int j, Uint16 currentState, Uint16 nextState, Bloc
 Uint16 Grid::GetPartialStatus(int i, int j, Uint16 currentState)
 {
 	std::bitset<16> currentBitSet(currentState);
-	if (i < 0 || i + 4 >= grid_height || j < 0 || j + 4 >= grid_width)
+	std::bitset<16> status = 0x0000;
+	for (int y = 0; y < 4; y++)
 	{
-		return 0xFF;
-	}
-	else
-	{
-		std::bitset<16> status = 0x0000;
-		for (int y = 0; y < 4; y++)
+		for (int x = 0; x < 4; x++)
 		{
-			for (int x = 0; x < 4; x++)
+			if (i + y < 0 || i + y >= grid_height || j + x < 0 || j + x >= grid_width)
 			{
-				if (grid[i + y][j + x]->GetStatus() != Empty && !currentBitSet.test(15 - (y * 4 + x)))
-				{
-					status.set(15 - (y * 4 + x));
-				}
+				continue;
+			}
+
+			if (grid[i + y][j + x]->GetStatus() != Empty && !currentBitSet.test(15 - (y * 4 + x)))
+			{
+				status.set(15 - (y * 4 + x));
 			}
 		}
-
-		return status.to_ullong();
 	}
+
+	return status.to_ullong();
 }
 
 void Grid::Render(SDL_Renderer* gRenderer)
@@ -118,4 +116,26 @@ void Grid::Render(SDL_Renderer* gRenderer)
 			offsetY += draw_rect.h;
 		}
 	}
+}
+
+bool Grid::IsInBounds(int x, int y, Uint16 testState)
+{
+	std::bitset<16> stateBitSet = std::bitset<16>(testState);
+	bool inBounds = true;
+	for (int i = 0; i < 4; i++)
+	{
+		for (int j = 0; j < 4; j++)
+		{
+			if (stateBitSet.test(i * 4 + j))
+			{
+				int currentX = x + j;
+				int currentY = y + i;
+				inBounds = inBounds &&
+					currentX >= 0 && currentX < grid_width &&
+					currentY >= 0 && currentY < grid_height;
+			}
+		}
+	}
+
+	return inBounds;
 }

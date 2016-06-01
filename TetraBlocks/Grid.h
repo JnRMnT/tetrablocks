@@ -17,6 +17,7 @@ public:
 	void AddBlock(Block* block);
 	void UpdateBlock(int i, int j, Uint16 currentState, Uint16 nextState, Block* block);
 	Uint16 GetPartialStatus(int i, int j, Uint16 currentState);
+	bool IsInBounds(int x, int y, Uint16 testState);
 private:
 	Cell* grid[grid_height][grid_width];
 };
