@@ -43,9 +43,21 @@ void IntervalHandler::ResumeTimer()
 
 void IntervalHandler::Update()
 {
-	if (this->timer->getTicks() > blockMovementInterval)
+	//First Check If There is an Active Block
+	if (player->ActiveBlock != nullptr)
 	{
-		//Move The Block
-
+		//Move the active block
+		if (this->timer->getTicks() > blockMovementInterval)
+		{
+			//Move The Block
+			gameManager->MoveActiveBlock();
+			this->timer->stop();
+			this->timer->start();
+		}
+	}
+	else
+	{
+		//Spawn a new block
+		gameManager->SpawnNewBlock();
 	}
 }

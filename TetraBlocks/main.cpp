@@ -142,10 +142,7 @@ int main(int argc, char* args[])
 			game_manager = new GameManager();
 			player = new Player(game_manager->GetGridInstance());
 			intervalHandler = new IntervalHandler(game_manager, player);
-
-
-			player->ActiveBlock = new Block(5, 5, L, player->rotationHelper, game_manager->GetGridInstance());
-			game_manager->GetGridInstance()->AddBlock(player->ActiveBlock);
+			game_manager->SetPlayer(player);
 			game_manager->SetIntervalHandler(intervalHandler);
 
 			// Start the Game
@@ -154,6 +151,13 @@ int main(int argc, char* args[])
 			//While application is running
 			while (!quit)
 			{
+				if (game_manager->IsPlaying())
+				{
+					//Game is in session
+					intervalHandler->Update();
+				}
+
+
 				//Handle events on queue
 				while (SDL_PollEvent(&e) != 0)
 				{
@@ -167,23 +171,10 @@ int main(int argc, char* args[])
 						InputHandler::HandleInput(e, player);
 					}
 				}
-
-				if (game_manager->IsPlaying())
-				{
-					//Game is in session
-					if(player->ActiveBlock != nullptr)
-					{
-						//Move the active block
-					}
-
-					intervalHandler->Update();
-				}
-
-
+				
 				//Clear screen
 				SDL_SetRenderDrawColor(gRenderer, 0xFF, 0xFF, 0xFF, 0xFF);
 				SDL_RenderClear(gRenderer);
-
 				
 				game_manager->GetGridInstance()->Render(gRenderer);
 

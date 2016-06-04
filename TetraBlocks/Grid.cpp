@@ -52,17 +52,20 @@ void Grid::UpdateBlock(int i, int j, Uint16 gridState, int nextI, int nextJ, Uin
 	{
 		for (int x = 0; x < 4; x++)
 		{
-			int bit_pos = 15 - (y * 4 + x);
-			bool currentCellFilled = currentBitSet.test(bit_pos);
-			bool nextCellFilled = nextBitSet.test(bit_pos);
+			if (nextI + y >= 0 && nextI + y < grid_height && nextJ + j >0 && nextJ + j < grid_width)
+			{
+				int bit_pos = 15 - (y * 4 + x);
+				bool currentCellFilled = currentBitSet.test(bit_pos);
+				bool nextCellFilled = nextBitSet.test(bit_pos);
 
-			if (currentCellFilled && !nextCellFilled)
-			{
-				grid[nextI + y][nextJ + x]->SetStatus(Empty);
-			}
-			else if (!currentBitSet.test(bit_pos) && nextCellFilled)
-			{
-				grid[nextI + y][nextJ + x]->SetStatus(block->GetStatusEquivalent());
+				if (currentCellFilled && !nextCellFilled)
+				{
+					grid[nextI + y][nextJ + x]->SetStatus(Empty);
+				}
+				else if (!currentBitSet.test(bit_pos) && nextCellFilled)
+				{
+					grid[nextI + y][nextJ + x]->SetStatus(block->GetStatusEquivalent());
+				}
 			}
 		}
 	}

@@ -13,6 +13,7 @@ public:
 	void Rotate(Direction direction);
 	void Move(Direction movement);
 	CellStatus GetStatusEquivalent();
+	bool CanMove(int x, int y);
 	int GetCenterX();
 	int GetCenterY();
 	Uint16 GetState();
@@ -23,5 +24,4 @@ private:
 	Uint16 state;
 	RotationHelper* rotationHelper;
 	Grid* grid;
-	bool CanMove(int x, int y);
 };

@@ -8,4 +8,5 @@ const int SCREEN_HEIGHT = 960;
 static Uint8* GRID_BG_COLOR = new Uint8[4]{ 0xE0, 0xE0, 0xE0 ,0xFF };
 
 const int DefaultBlockMovementInterval = 1000;
+#define RandomPoolSize 24
 #endif

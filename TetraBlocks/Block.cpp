@@ -46,7 +46,7 @@ void Block::Move(Direction movement)
 
 bool Block::CanMove(int x, int y)
 {
-	return grid->IsInBounds(x, y, state);
+	return grid->IsInBounds(x, y, state) && grid->IsInBounds(x, y, grid->GetPartialStatus(y, x, state, true));
 }
 
 void Block::Rotate(Direction direction)
