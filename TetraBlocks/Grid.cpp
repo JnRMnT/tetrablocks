@@ -111,7 +111,7 @@ void Grid::CheckStateAndEmptyCells(std::bitset<16> state, int y, int x, int bitT
 	}
 }
 
-Uint16 Grid::GetPartialStatus(int i, int j, Uint16 currentState)
+Uint16 Grid::GetPartialStatus(int i, int j, Uint16 currentState, bool isMovement)
 {
 	std::bitset<16> currentBitSet(currentState);
 	std::bitset<16> status = 0x0000;
@@ -121,10 +121,16 @@ Uint16 Grid::GetPartialStatus(int i, int j, Uint16 currentState)
 		{
 			if (i + y < 0 || i + y >= grid_height || j + x < 0 || j + x >= grid_width)
 			{
-				continue;
+				if (isMovement)
+				{
+					continue;
+				}
+				else
+				{
+					status.set(15 - (y * 4 + x));
+				}
 			}
-
-			if (grid[i + y][j + x]->GetStatus() != Empty && !currentBitSet.test(15 - (y * 4 + x)))
+			else if (grid[i + y][j + x]->GetStatus() != Empty && !currentBitSet.test(15 - (y * 4 + x)))
 			{
 				status.set(15 - (y * 4 + x));
 			}
@@ -168,7 +174,7 @@ bool Grid::IsInBounds(int x, int y, Uint16 testState)
 	{
 		for (int j = 0; j < 4; j++)
 		{
-			if (stateBitSet.test(i * 4 + j))
+			if (stateBitSet.test(15 - (i * 4 + j)))
 			{
 				int currentX = x + j;
 				int currentY = y + i;

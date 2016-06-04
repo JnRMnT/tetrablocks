@@ -98,6 +98,6 @@ Uint16 RotationHelper::GetPrevious(BlockType blockType, Uint16 currentState)
 
 bool RotationHelper::CanRotateTo(Grid* grid, Block* block, Uint16 state)
 {
-	Uint16 partial_status = grid->GetPartialStatus(block->GetCenterY(), block->GetCenterX(), block->GetState());
-	return (~partial_status) & block->GetState() == block->GetState();
+	Uint16 partial_status = grid->GetPartialStatus(block->GetCenterY(), block->GetCenterX(), block->GetState(), false);
+	return ((Uint16)(~partial_status) & state) == state;
 }

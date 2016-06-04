@@ -38,7 +38,7 @@ void Block::Move(Direction movement)
 
 	if (CanMove(newCenterX, newCenterY))
 	{
-		grid->UpdateBlock(center_y, center_x, grid->GetPartialStatus(newCenterY, newCenterX, state), newCenterY, newCenterX, state, state, this);
+		grid->UpdateBlock(center_y, center_x, grid->GetPartialStatus(newCenterY, newCenterX, state, true), newCenterY, newCenterX, state, state, this);
 		this->center_x = newCenterX;
 		this->center_y = newCenterY;
 	}
