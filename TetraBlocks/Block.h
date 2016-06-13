@@ -11,9 +11,10 @@ public:
 	Block(int center_x, int center_y, BlockType type, RotationHelper* rotationHelper, Grid* grid);
 	~Block();
 	void Rotate(Direction direction);
-	void Move(Direction movement);
+	bool Move(Direction movement);
 	CellStatus GetStatusEquivalent();
-	bool CanMove(int x, int y);
+	bool CanMove(int x, int y, Uint16 previousState);
+	bool HasCollision(Uint16 gridState);
 	int GetCenterX();
 	int GetCenterY();
 	Uint16 GetState();

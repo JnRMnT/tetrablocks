@@ -27,7 +27,7 @@ SDL_Renderer* gRenderer = NULL;
 //Current displayed texture
 SDL_Texture* gTexture = NULL;
 
-GameManager* game_manager = NULL;
+GameManager* gameManager = NULL;
 Player* player = NULL;
 IntervalHandler* intervalHandler = NULL;
 
@@ -113,7 +113,7 @@ void close()
 	IMG_Quit();
 	SDL_Quit();
 
-	free(game_manager);
+	free(gameManager);
 	free(player);
 	free(intervalHandler);
 }
@@ -139,19 +139,19 @@ int main(int argc, char* args[])
 
 			//Event handler
 			SDL_Event e;
-			game_manager = new GameManager();
-			player = new Player(game_manager->GetGridInstance());
-			intervalHandler = new IntervalHandler(game_manager, player);
-			game_manager->SetPlayer(player);
-			game_manager->SetIntervalHandler(intervalHandler);
+			gameManager = new GameManager();
+			player = new Player(gameManager->GetGridInstance());
+			intervalHandler = new IntervalHandler(gameManager, player);
+			gameManager->SetPlayer(player);
+			gameManager->SetIntervalHandler(intervalHandler);
 
 			// Start the Game
-			game_manager->StartGame();
+			gameManager->StartGame();
 
 			//While application is running
 			while (!quit)
 			{
-				if (game_manager->IsPlaying())
+				if (gameManager->IsPlaying())
 				{
 					//Game is in session
 					intervalHandler->Update();
@@ -166,7 +166,7 @@ int main(int argc, char* args[])
 					{
 						quit = true;
 					}
-					else if (game_manager->IsPlaying())
+					else if (gameManager->IsPlaying())
 					{
 						InputHandler::HandleInput(e, player);
 					}
@@ -176,7 +176,7 @@ int main(int argc, char* args[])
 				SDL_SetRenderDrawColor(gRenderer, 0xFF, 0xFF, 0xFF, 0xFF);
 				SDL_RenderClear(gRenderer);
 				
-				game_manager->GetGridInstance()->Render(gRenderer);
+				gameManager->GetGridInstance()->Render(gRenderer);
 
 				//Update screen
 				SDL_RenderPresent(gRenderer);

@@ -87,11 +87,8 @@ void GameManager::MoveActiveBlock()
 {
 	int newX = player->ActiveBlock->GetCenterX();
 	int newY = player->ActiveBlock->GetCenterY() + 1;
-	if (player->ActiveBlock->CanMove(newX, newY))
-	{
-		player->ActiveBlock->Move(Down);
-	}
-	else
+	
+	if(!player->ActiveBlock->Move(Down))
 	{
 		player->ActiveBlock = nullptr;
 	}

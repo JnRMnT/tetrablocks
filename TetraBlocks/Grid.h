@@ -16,7 +16,7 @@ public:
 	~Grid();
 	void Render(SDL_Renderer* gRenderer);
 	void AddBlock(Block* block);
-	void UpdateBlock(int i, int j, Uint16 gridState, int nextI, int nextJ, Uint16 currentState, Uint16 nextState, Block* block);
+	void UpdateBlock(int i, int j, Uint16 nextGridState, Uint16 currentGridState, int nextI, int nextJ, Uint16 currentState, Uint16 nextState, Block* block);
 	Uint16 GetPartialStatus(int i, int j, Uint16 currentState, bool isMovement);
 	bool IsOccupied(int i, int j);
 	bool IsInBounds(int x, int y, Uint16 testState);

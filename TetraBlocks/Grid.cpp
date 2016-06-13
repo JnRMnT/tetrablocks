@@ -44,9 +44,10 @@ void Grid::AddBlock(Block* block)
 	}
 }
 
-void Grid::UpdateBlock(int i, int j, Uint16 gridState, int nextI, int nextJ, Uint16 currentState, Uint16 nextState, Block* block)
+void Grid::UpdateBlock(int i, int j, Uint16 nextGridState, Uint16 currentGridState, int nextI, int nextJ, Uint16 currentState, Uint16 nextState, Block* block)
 {
-	std::bitset<16> currentBitSet = std::bitset<16>(gridState);
+	std::bitset<16> nextGridSet = std::bitset<16>(nextGridState);
+	std::bitset<16> currentGridSet = std::bitset<16>(currentGridState);
 	std::bitset<16> nextBitSet = std::bitset<16>(nextState);
 	for (int y = 0; y < 4; y++)
 	{
@@ -55,14 +56,15 @@ void Grid::UpdateBlock(int i, int j, Uint16 gridState, int nextI, int nextJ, Uin
 			if (nextI + y >= 0 && nextI + y < grid_height && nextJ + j >0 && nextJ + j < grid_width)
 			{
 				int bit_pos = 15 - (y * 4 + x);
-				bool currentCellFilled = currentBitSet.test(bit_pos);
+				bool nextGridCellFilled = nextGridSet.test(bit_pos);
 				bool nextCellFilled = nextBitSet.test(bit_pos);
+				bool currentGridCellFilled = currentGridSet.test(bit_pos);
 
-				if (currentCellFilled && !nextCellFilled)
+				if (currentGridCellFilled && !nextCellFilled)
 				{
 					grid[nextI + y][nextJ + x]->SetStatus(Empty);
 				}
-				else if (!currentBitSet.test(bit_pos) && nextCellFilled)
+				else if (!nextGridCellFilled && nextCellFilled)
 				{
 					grid[nextI + y][nextJ + x]->SetStatus(block->GetStatusEquivalent());
 				}

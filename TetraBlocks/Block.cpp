@@ -16,10 +16,13 @@ Block::~Block()
 {
 }
 
-void Block::Move(Direction movement)
+bool Block::Move(Direction movement)
 {
 	int newCenterX = this->center_x;
 	int newCenterY = this->center_y;
+	Uint16 previousState;
+	std::bitset<16> nextBitset(0);
+	std::bitset<16> currentBitset(state);
 
 	switch (movement)
 	{
@@ -27,26 +30,81 @@ void Block::Move(Direction movement)
 		break;
 	case Left:
 		newCenterX--;
+		for (int i = 0; i < 4; i++)
+		{
+			for (int j = 0; j < 4; j++)
+			{
+				bool set = false;
+				if (j != 0 && currentBitset.test(15 - (i * 4 + j - 1)))
+				{
+					set = true;
+				}
+				nextBitset.set(15 - (i * 4 + j), set);
+			}
+		}
 		break;
 	case Right:
 		newCenterX++;
+		for (int i = 0; i < 4; i++)
+		{
+			for (int j = 0; j < 4; j++)
+			{
+				bool set = false;
+				if (j != 3 && currentBitset.test(15 - (i * 4 + j + 1)))
+				{
+					set = true;
+				}
+				nextBitset.set(15 - (i * 4 + j), set);
+			}
+		}
 		break;
 	case Down:
 		newCenterY++;
+		for (int i = 0; i < 4; i++)
+		{
+			for (int j = 0; j < 4; j++)
+			{
+				bool set = false;
+				if (i != 3 && currentBitset.test(15 - ((i + 1) * 4 + j)))
+				{
+					set = true;
+				}
+				nextBitset.set(15 - (i * 4 + j), set);
+			}
+		}
 		break;
 	}
 
-	if (CanMove(newCenterX, newCenterY))
+	previousState = nextBitset.to_ullong();
+
+	if (CanMove(newCenterX, newCenterY, previousState))
 	{
-		grid->UpdateBlock(center_y, center_x, grid->GetPartialStatus(newCenterY, newCenterX, state, true), newCenterY, newCenterX, state, state, this);
+		grid->UpdateBlock(center_y, center_x, grid->GetPartialStatus(newCenterY, newCenterX, state, true), previousState, newCenterY, newCenterX, state, state, this);
 		this->center_x = newCenterX;
 		this->center_y = newCenterY;
+		return true;
+	}
+	else
+	{
+		return false;
 	}
 }
 
-bool Block::CanMove(int x, int y)
+bool Block::CanMove(int x, int y, Uint16 previousState)
 {
-	return grid->IsInBounds(x, y, state) && grid->IsInBounds(x, y, grid->GetPartialStatus(y, x, state, true));
+	if (grid->IsInBounds(x, y, state) && !HasCollision(grid->GetPartialStatus(y, x, previousState, true)))
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
+
+bool Block::HasCollision(Uint16 gridState)
+{
+	return ((gridState & state) != 0);
 }
 
 void Block::Rotate(Direction direction)
@@ -63,7 +121,7 @@ void Block::Rotate(Direction direction)
 
 	if (rotationHelper->CanRotateTo(grid, this, nextState))
 	{
-		grid->UpdateBlock(center_y, center_x, state, center_y, center_x, state, nextState, this);
+		grid->UpdateBlock(center_y, center_x, state, state, center_y, center_x, state, nextState, this);
 		state = nextState;
 	}
 }
