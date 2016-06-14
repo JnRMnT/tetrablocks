@@ -160,8 +160,13 @@ void Grid::Render(SDL_Renderer* gRenderer)
 
 			for (int j = 0; j < grid_width; j++) {
 				Uint8* color = RenderingHelper::GetRenderingColor((*grid[i][j]).GetStatus());
+				Uint8* borderColor = RenderingHelper::GetBorderColor((*grid[i][j]).GetStatus());
+
 				SDL_SetRenderDrawColor(gRenderer, color[0], color[1], color[2], color[3]);
 				SDL_RenderFillRect(gRenderer, &draw_rect);
+				//Gives the border effect
+				SDL_SetRenderDrawColor(gRenderer, borderColor[0], borderColor[1], borderColor[2], borderColor[3]);
+				SDL_RenderDrawRect(gRenderer, &draw_rect);
 
 				offsetX += draw_rect.w;
 				draw_rect.x = offsetX;

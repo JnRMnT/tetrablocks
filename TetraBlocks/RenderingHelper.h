@@ -8,4 +8,5 @@ public:
 	RenderingHelper();
 	~RenderingHelper();
 	static Uint8* GetRenderingColor(CellStatus status);
+	static Uint8* GetBorderColor(CellStatus status);
 };
