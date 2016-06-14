@@ -53,7 +53,7 @@ void Grid::UpdateBlock(int i, int j, Uint16 nextGridState, Uint16 currentGridSta
 	{
 		for (int x = 0; x < 4; x++)
 		{
-			if (nextI + y >= 0 && nextI + y < grid_height && nextJ + j >0 && nextJ + j < grid_width)
+			if (nextI + y >= 0 && nextI + y < grid_height && nextJ + x >= 0 && nextJ + x < grid_width)
 			{
 				int bit_pos = 15 - (y * 4 + x);
 				bool nextGridCellFilled = nextGridSet.test(bit_pos);
