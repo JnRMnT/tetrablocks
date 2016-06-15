@@ -2,6 +2,7 @@
 #include "Constants.h"
 #include <time.h>
 #include <stdlib.h>
+#include "RenderingHelper.h"
 
 GameManager::GameManager()
 {
@@ -112,13 +113,72 @@ void GameManager::Render(SDL_Renderer* gRenderer, LTexture* textTexture)
 	int guiStartOffset = SCREEN_HEIGHT / grid_height * (grid_width + 1);
 	int topOffset = SCREEN_HEIGHT / 20;
 
-	SDL_Rect draw_rect = { guiStartOffset, topOffset, SCREEN_WIDTH / 5, SCREEN_HEIGHT / 6 };
+	int scoreboardHeight = SCREEN_HEIGHT / 20;
+
+	SDL_Rect draw_rect = { guiStartOffset, topOffset, SCREEN_WIDTH / 8, SCREEN_WIDTH / 8 + scoreboardHeight };
 	SDL_SetRenderDrawColor(gRenderer, GRID_BORDER_COLOR[0], GRID_BORDER_COLOR[1], GRID_BORDER_COLOR[2], GRID_BORDER_COLOR[3]);
 	SDL_RenderDrawRect(gRenderer, &draw_rect);
 
 	//Render Scoreboard 
-	SDL_Rect scoreboard_box = { guiStartOffset, topOffset, draw_rect.w, draw_rect.h / 3 };
+	SDL_Rect scoreboard_box = { guiStartOffset, topOffset, draw_rect.w, scoreboardHeight };
 	SDL_RenderDrawRect(gRenderer, &scoreboard_box);
 	this->scoreManager->Render(gRenderer, &scoreboard_box, textTexture);
+
+	//Render Upcoming Block
+	RenderUpcomingBlock(gRenderer, guiStartOffset, topOffset, scoreboardHeight);
+}
+
+void GameManager::RenderUpcomingBlock(SDL_Renderer* gRenderer, int guiStartOffset, int topOffset, int scoreboardHeight)
+{
+	if (nextBlockType)
+	{
+		Uint16 nextBlockState = player->rotationHelper->GetBlockState(nextBlockType, 0);
+		int offsetX = guiStartOffset;
+		int offsetY = topOffset + scoreboardHeight;
+		int initialOffsetX = offsetX;
+		int initialOffsetY = offsetY;
+		int cellSize = SCREEN_WIDTH / 8 / 4;
+
+		SDL_Rect draw_rect = { offsetX, offsetY, cellSize, cellSize };
+		Uint8* filledColor = RenderingHelper::GetRenderingColor((CellStatus)(int)nextBlockType);
+		Uint8* filledBorderColor = RenderingHelper::GetBorderColor((CellStatus)(int)nextBlockType);
+
+		Uint8* emptyColor = RenderingHelper::GetRenderingColor(EmptyGUI);
+		Uint8* emptyBorderColor = RenderingHelper::GetBorderColor(EmptyGUI);
+
+		std::bitset<16> nextBlockBitset = std::bitset<16>(nextBlockState);
+
+		for (int i = 0; i < 4; i++) {
+			offsetX = initialOffsetX;
+			draw_rect.x = offsetX;
+			draw_rect.y = offsetY;
+
+			for (int j = 0; j < 4; j++) {
+				Uint8* color;
+				Uint8* borderColor;
+
+				if (nextBlockBitset.test(15 - (i * 4 + j)))
+				{
+					color = filledColor;
+					borderColor = filledBorderColor;
+				}
+				else
+				{
+					color = emptyColor;
+					borderColor = emptyBorderColor;
+				}
+
+				SDL_SetRenderDrawColor(gRenderer, color[0], color[1], color[2], color[3]);
+				SDL_RenderFillRect(gRenderer, &draw_rect);
+				//Gives the border effect
+				SDL_SetRenderDrawColor(gRenderer, borderColor[0], borderColor[1], borderColor[2], borderColor[3]);
+				SDL_RenderDrawRect(gRenderer, &draw_rect);
+
+				offsetX += draw_rect.w;
+				draw_rect.x = offsetX;
+			}
+			offsetY += draw_rect.h;
+		}
+	}
 
 }

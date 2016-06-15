@@ -34,5 +34,6 @@ private:
 	BlockType GetNextBlockType();
 	BlockType nextBlockType;
 	int AddToPool(BlockType type, BlockType* pool, int count, int index);
+	void RenderUpcomingBlock(SDL_Renderer* gRenderer, int guiStartOffset, int topOffset, int scoreboardHeight);
 	int currentLevel;
 };

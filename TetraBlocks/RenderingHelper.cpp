@@ -39,6 +39,9 @@ Uint8* RenderingHelper::GetRenderingColor(CellStatus status)
 	case White:
 		return new Uint8[4]{ 0xE6, 0xE6, 0xE6 ,0xFF };
 		break;
+	case EmptyGUI:
+		return new Uint8[4]{ 0xF0, 0xF5, 0xF5 ,0x55 };
+		break;
 	default:
 		break;
 	}
@@ -71,6 +74,9 @@ Uint8* RenderingHelper::GetBorderColor(CellStatus status)
 		break;
 	case White:
 		return new Uint8[4]{ 0x1A, 0x1A, 0x1A ,0xFF };
+		break;
+	case EmptyGUI:
+		return new Uint8[4]{ 0xE0, 0xEB, 0xEB ,0x55 };
 		break;
 	default:
 		break;

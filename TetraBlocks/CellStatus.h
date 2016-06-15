@@ -8,5 +8,6 @@ enum CellStatus
 	Pink = 3,
 	Blue = 4,
 	Red = 5,
-	White = 6
+	White = 6,
+	EmptyGUI = 99
 };
