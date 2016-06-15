@@ -50,7 +50,10 @@ void InputHandler::HandleInput(SDL_Event e, Player* player)
 				reocurrenceCount++;
 				timer->stop();
 				timer->start();
-				HandleSingleInput(e, player);
+				if (player->ActiveBlock != nullptr)
+				{
+					HandleSingleInput(e, player);
+				}
 			}
 		}
 	}

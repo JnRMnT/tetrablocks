@@ -83,7 +83,9 @@ BlockType GameManager::GetNextBlockType()
 
 void GameManager::SpawnNewBlock()
 {
+	int retryCount = 0;
 	player->ActiveBlock = new Block(5, 10, nextBlockType, player->rotationHelper, grid);
+
 	grid->AddBlock(player->ActiveBlock);
 	nextBlockType = GetNextBlockType();
 }
@@ -130,55 +132,51 @@ void GameManager::Render(SDL_Renderer* gRenderer, LTexture* textTexture)
 
 void GameManager::RenderUpcomingBlock(SDL_Renderer* gRenderer, int guiStartOffset, int topOffset, int scoreboardHeight)
 {
-	if (nextBlockType)
-	{
-		Uint16 nextBlockState = player->rotationHelper->GetBlockState(nextBlockType, 0);
-		int offsetX = guiStartOffset;
-		int offsetY = topOffset + scoreboardHeight;
-		int initialOffsetX = offsetX;
-		int initialOffsetY = offsetY;
-		int cellSize = SCREEN_WIDTH / 8 / 4;
+	Uint16 nextBlockState = player->rotationHelper->GetBlockState(nextBlockType, 0);
+	int offsetX = guiStartOffset;
+	int offsetY = topOffset + scoreboardHeight;
+	int initialOffsetX = offsetX;
+	int initialOffsetY = offsetY;
+	int cellSize = SCREEN_WIDTH / 8 / 4;
 
-		SDL_Rect draw_rect = { offsetX, offsetY, cellSize, cellSize };
-		Uint8* filledColor = RenderingHelper::GetRenderingColor((CellStatus)(int)nextBlockType);
-		Uint8* filledBorderColor = RenderingHelper::GetBorderColor((CellStatus)(int)nextBlockType);
+	SDL_Rect draw_rect = { offsetX, offsetY, cellSize, cellSize };
+	Uint8* filledColor = RenderingHelper::GetRenderingColor((CellStatus)(int)nextBlockType);
+	Uint8* filledBorderColor = RenderingHelper::GetBorderColor((CellStatus)(int)nextBlockType);
 
-		Uint8* emptyColor = RenderingHelper::GetRenderingColor(EmptyGUI);
-		Uint8* emptyBorderColor = RenderingHelper::GetBorderColor(EmptyGUI);
+	Uint8* emptyColor = RenderingHelper::GetRenderingColor(EmptyGUI);
+	Uint8* emptyBorderColor = RenderingHelper::GetBorderColor(EmptyGUI);
 
-		std::bitset<16> nextBlockBitset = std::bitset<16>(nextBlockState);
+	std::bitset<16> nextBlockBitset = std::bitset<16>(nextBlockState);
 
-		for (int i = 0; i < 4; i++) {
-			offsetX = initialOffsetX;
-			draw_rect.x = offsetX;
-			draw_rect.y = offsetY;
+	for (int i = 0; i < 4; i++) {
+		offsetX = initialOffsetX;
+		draw_rect.x = offsetX;
+		draw_rect.y = offsetY;
 
-			for (int j = 0; j < 4; j++) {
-				Uint8* color;
-				Uint8* borderColor;
+		for (int j = 0; j < 4; j++) {
+			Uint8* color;
+			Uint8* borderColor;
 
-				if (nextBlockBitset.test(15 - (i * 4 + j)))
-				{
-					color = filledColor;
-					borderColor = filledBorderColor;
-				}
-				else
-				{
-					color = emptyColor;
-					borderColor = emptyBorderColor;
-				}
-
-				SDL_SetRenderDrawColor(gRenderer, color[0], color[1], color[2], color[3]);
-				SDL_RenderFillRect(gRenderer, &draw_rect);
-				//Gives the border effect
-				SDL_SetRenderDrawColor(gRenderer, borderColor[0], borderColor[1], borderColor[2], borderColor[3]);
-				SDL_RenderDrawRect(gRenderer, &draw_rect);
-
-				offsetX += draw_rect.w;
-				draw_rect.x = offsetX;
+			if (nextBlockBitset.test(15 - (i * 4 + j)))
+			{
+				color = filledColor;
+				borderColor = filledBorderColor;
 			}
-			offsetY += draw_rect.h;
-		}
-	}
+			else
+			{
+				color = emptyColor;
+				borderColor = emptyBorderColor;
+			}
 
+			SDL_SetRenderDrawColor(gRenderer, color[0], color[1], color[2], color[3]);
+			SDL_RenderFillRect(gRenderer, &draw_rect);
+			//Gives the border effect
+			SDL_SetRenderDrawColor(gRenderer, borderColor[0], borderColor[1], borderColor[2], borderColor[3]);
+			SDL_RenderDrawRect(gRenderer, &draw_rect);
+
+			offsetX += draw_rect.w;
+			draw_rect.x = offsetX;
+		}
+		offsetY += draw_rect.h;
+	}
 }
