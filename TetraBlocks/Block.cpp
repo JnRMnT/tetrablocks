@@ -82,6 +82,7 @@ bool Block::Move(Direction movement)
 		grid->UpdateBlock(center_y, center_x, grid->GetPartialStatus(newCenterY, newCenterX, state, true), previousState, newCenterY, newCenterX, state, state, this);
 		this->center_x = newCenterX;
 		this->center_y = newCenterY;
+		grid->CheckRows();
 		return true;
 	}
 	else

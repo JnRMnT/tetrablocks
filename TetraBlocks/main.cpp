@@ -8,6 +8,7 @@
 #include "Player.h"
 #include "InputHandler.h"
 #include "IntervalHandler.h"
+#include <SDL_ttf.h>
 
 //Starts up SDL and creates window
 bool init();
@@ -26,6 +27,12 @@ SDL_Renderer* gRenderer = NULL;
 
 //Current displayed texture
 SDL_Texture* gTexture = NULL;
+
+//TrueType Font
+TTF_Font *gFont = NULL;
+
+//Rendered texture
+LTexture* gTextTexture = NULL;
 
 GameManager* gameManager = NULL;
 Player* player = NULL;
@@ -78,6 +85,16 @@ bool init()
 					printf("SDL_image could not initialize! SDL_image Error: %s\n", IMG_GetError());
 					success = false;
 				}
+
+
+				//Initialize SDL_ttf
+				if (TTF_Init() == -1)
+				{
+					printf("SDL_ttf could not initialize! SDL_ttf Error: %s\n", TTF_GetError());
+					success = false;
+				}
+
+				gTextTexture = new LTexture();
 			}
 		}
 	}
@@ -90,28 +107,41 @@ bool loadMedia()
 	//Loading success flag
 	bool success = true;
 
-	//Load arrow
-	/*
-	if (!gArrowTexture.loadFromFile("15_rotation_and_flipping/arrow.png"))
+	//Open the font
+	gFont = TTF_OpenFont("Resources/Square.ttf", DefaultFontSize);
+	if (gFont == NULL)
 	{
-		printf("Failed to load arrow texture!\n");
+		printf("Failed to load global font! SDL_ttf Error: %s\n", TTF_GetError());
 		success = false;
 	}
-	*/
+	else
+	{
+		gTextTexture->SetFont(gFont);
+	}
+
 	return success;
 }
 
 void close()
 {
+	//Free loaded images
+	gTextTexture->free();
+
 	//Destroy window	
 	SDL_DestroyRenderer(gRenderer);
 	SDL_DestroyWindow(gWindow);
 	gWindow = NULL;
 	gRenderer = NULL;
 
+	//Free global font
+	TTF_CloseFont(gFont);
+	gFont = NULL;
+
 	//Quit SDL subsystems
 	IMG_Quit();
 	SDL_Quit();
+	TTF_Quit();
+
 
 	free(gameManager);
 	free(player);
@@ -177,6 +207,7 @@ int main(int argc, char* args[])
 				SDL_RenderClear(gRenderer);
 				
 				gameManager->GetGridInstance()->Render(gRenderer);
+				gameManager->Render(gRenderer, gTextTexture);
 
 				//Update screen
 				SDL_RenderPresent(gRenderer);

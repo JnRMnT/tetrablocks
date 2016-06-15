@@ -5,6 +5,7 @@
 
 class Grid;
 class RotationHelper;
+
 class Block
 {
 public:

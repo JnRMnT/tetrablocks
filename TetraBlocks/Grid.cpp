@@ -3,14 +3,17 @@
 #include "Constants.h"
 #include <stdlib.h>
 #include "Block.h"
+#include "GameManager.h"
 
-Grid::Grid()
+Grid::Grid(GameManager* gameManager)
 {
 	for (int i = 0; i < grid_height; i++) {
 		for (int j = 0; j < grid_width; j++) {
 			grid[i][j] = new Cell();
 		}
 	}
+
+	this->gameManager = gameManager;
 }
 
 
@@ -113,6 +116,54 @@ void Grid::CheckStateAndEmptyCells(std::bitset<16> state, int y, int x, int bitT
 		int i = (15 - bitToCheck) / 4;
 		int j = (15 - bitToCheck) % 4;
 		this->grid[y + i][x + j]->SetStatus(Empty);
+	}
+}
+
+//Checks Rows For Compleation
+void Grid::CheckRows()
+{
+	int j;
+	int i = grid_height - 1;
+	bool hasCompleation = false;
+	while (i >= 0 && !hasCompleation)
+	{
+		j = 0;
+		bool completed = true;
+		while (completed && j < grid_width)
+		{
+			completed = completed && IsOccupied(i, j);
+			j++;
+		}
+
+		if (completed)
+		{
+			gameManager->AddScore(grid_width * 3);
+			hasCompleation = true;
+			ClearRow(i);
+			CheckRows();
+		}
+
+		i--;
+	}
+}
+
+void Grid::ClearRow(int row)
+{
+	for (int i = row; i >= 0; i--)
+	{
+		if (i != 0)
+		{
+			for (int j = 0; j < grid_width; j++)
+			{
+				grid[i][j]->SetStatus(grid[i - 1][j]->GetStatus());
+			}
+		}
+		else {
+			for (int j = 0; j < grid_width; j++)
+			{
+				grid[i][j]->SetStatus(Empty);
+			}
+		}
 	}
 }
 

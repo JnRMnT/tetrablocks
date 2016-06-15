@@ -61,3 +61,9 @@ void IntervalHandler::Update()
 		gameManager->SpawnNewBlock();
 	}
 }
+
+
+void IntervalHandler::UpdateLevel(int level)
+{
+	this->blockMovementInterval = (DefaultBlockMovementInterval - (level * DefaultBlockMovementInterval / 20));
+}

@@ -141,6 +141,7 @@
     <ClInclude Include="RenderingHelper.h" />
     <ClInclude Include="RotationHelper.h" />
     <ClInclude Include="IntervalHandler.h" />
+    <ClInclude Include="ScoreManager.h" />
     <ClInclude Include="Timer.h" />
   </ItemGroup>
   <ItemGroup>
@@ -155,9 +156,11 @@
     <ClCompile Include="RenderingHelper.cpp" />
     <ClCompile Include="RotationHelper.cpp" />
     <ClCompile Include="IntervalHandler.cpp" />
+    <ClCompile Include="ScoreManager.cpp" />
     <ClCompile Include="Timer.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="libfreetype-6.dll" />
     <None Include="libpng16-16.dll">
       <DeploymentContent>true</DeploymentContent>
     </None>
@@ -173,6 +176,10 @@
     <None Include="SDL2_ttf.dll">
       <DeploymentContent>true</DeploymentContent>
     </None>
+    <None Include="zlib1.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <Font Include="Resources\Square.ttf" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

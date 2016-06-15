@@ -4,16 +4,18 @@
 #include "Player.h"
 
 class GameManager;
+
 class IntervalHandler
 {
 public:
-	IntervalHandler(GameManager* gameManager,Player* player);
+	IntervalHandler(GameManager* gameManager, Player* player);
 	~IntervalHandler();
 	void StartTimer();
 	void StopTimer();
 	void PauseTimer();
 	void ResumeTimer();
 	void Update();
+	void UpdateLevel(int level);
 private:
 	Timer* timer;
 	GameManager* gameManager;

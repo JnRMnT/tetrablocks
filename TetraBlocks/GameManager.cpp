@@ -5,7 +5,8 @@
 
 GameManager::GameManager()
 {
-	grid = new Grid();
+	grid = new Grid(this);
+	scoreManager = new ScoreManager();
 	srand(time(NULL));
 
 	//Fill the Random Pool with according possibilities
@@ -37,12 +38,15 @@ GameManager::~GameManager()
 {
 	delete grid;
 	grid = nullptr;
+	delete scoreManager;
 	delete randomPool;
 }
 
 void GameManager::StartGame()
 {
 	state = Playing;
+	currentLevel = 1;
+	scoreManager->ResetScore();
 	intervalHandler->StartTimer();
 }
 
@@ -87,9 +91,34 @@ void GameManager::MoveActiveBlock()
 {
 	int newX = player->ActiveBlock->GetCenterX();
 	int newY = player->ActiveBlock->GetCenterY() + 1;
-	
-	if(!player->ActiveBlock->Move(Down))
+
+	if (!player->ActiveBlock->Move(Down))
 	{
 		player->ActiveBlock = nullptr;
+		AddScore(1);
 	}
+}
+
+void GameManager::AddScore(int score)
+{
+	int newScore = this->scoreManager->AddScore(score);
+	currentLevel = floor((double)newScore / (double)LevelScoreRequirement);
+	this->intervalHandler->UpdateLevel(currentLevel);
+}
+
+void GameManager::Render(SDL_Renderer* gRenderer, LTexture* textTexture)
+{
+	//Draw Game Related GUIs
+	int guiStartOffset = SCREEN_HEIGHT / grid_height * (grid_width + 1);
+	int topOffset = SCREEN_HEIGHT / 20;
+
+	SDL_Rect draw_rect = { guiStartOffset, topOffset, SCREEN_WIDTH / 5, SCREEN_HEIGHT / 6 };
+	SDL_SetRenderDrawColor(gRenderer, GRID_BORDER_COLOR[0], GRID_BORDER_COLOR[1], GRID_BORDER_COLOR[2], GRID_BORDER_COLOR[3]);
+	SDL_RenderDrawRect(gRenderer, &draw_rect);
+
+	//Render Scoreboard 
+	SDL_Rect scoreboard_box = { guiStartOffset, topOffset, draw_rect.w, draw_rect.h / 3 };
+	SDL_RenderDrawRect(gRenderer, &scoreboard_box);
+	this->scoreManager->Render(gRenderer, &scoreboard_box, textTexture);
+
 }
