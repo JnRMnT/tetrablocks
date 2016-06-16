@@ -58,7 +58,8 @@ bool init()
 		}
 
 		//Create window
-		gWindow = SDL_CreateWindow("Tetra Blocks", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
+		gWindow = SDL_CreateWindow("Tetra Blocks", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, DEFAULT_SCREEN_WIDTH, DEFAULT_SCREEN_HEIGHT, SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
+
 		if (gWindow == NULL)
 		{
 			printf("Window could not be created! SDL Error: %s\n", SDL_GetError());
@@ -66,6 +67,7 @@ bool init()
 		}
 		else
 		{
+			SDL_SetWindowMinimumSize(gWindow, MIN_SCREEN_WIDTH, MIN_SCREEN_HEIGHT);
 			//Create renderer for window
 			gRenderer = SDL_CreateRenderer(gWindow, -1, SDL_RENDERER_ACCELERATED);
 			if (gRenderer == NULL)
@@ -198,7 +200,7 @@ int main(int argc, char* args[])
 					}
 					else if (gameManager->IsPlaying())
 					{
-						InputHandler::HandleInput(e, player);
+						InputHandler::HandleInput(e, player, gFont, gTextTexture);
 					}
 				}
 				

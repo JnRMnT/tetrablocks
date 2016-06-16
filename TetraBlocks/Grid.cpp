@@ -201,7 +201,7 @@ void Grid::Render(SDL_Renderer* gRenderer)
 	if (grid != nullptr) {
 		int offsetX = 0;
 		int offsetY = 0;
-		int cellSize = SCREEN_HEIGHT / grid_height;
+		int cellSize = Player::ScreenHeight / grid_height;
 		SDL_Rect draw_rect = { 0, 0, cellSize, cellSize };
 
 		for (int i = 0; i < grid_height; i++) {

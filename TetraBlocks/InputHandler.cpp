@@ -1,14 +1,21 @@
 #include "InputHandler.h"
 #include "Constants.h"
 
-
 SDL_Keycode lastPressedKey;
 Timer* timer;
 int reocurrenceCount;
 
-void InputHandler::HandleInput(SDL_Event e, Player* player)
+void InputHandler::HandleInput(SDL_Event e, Player* player, TTF_Font* gFont, LTexture* fontTexture)
 {
-	if (e.type == SDL_KEYUP)
+	if (e.type == SDL_WINDOWEVENT && e.window.event == SDL_WINDOWEVENT_RESIZED)
+	{
+		Player::ScreenWidth = e.window.data1;
+		Player::ScreenHeight = e.window.data2;
+		Player::FontSize = (double)DefaultFontSize * ((double)Player::ScreenWidth * (double)Player::ScreenHeight / (double)DEFAULT_SCREEN_WIDTH / (double)DEFAULT_SCREEN_HEIGHT);
+		gFont = TTF_OpenFont("Resources/Square.ttf", Player::FontSize);
+		fontTexture->SetFont(gFont);
+	}
+	else if (e.type == SDL_KEYUP)
 	{
 		lastPressedKey = NULL;
 		reocurrenceCount = 0;
@@ -36,7 +43,7 @@ void InputHandler::HandleInput(SDL_Event e, Player* player)
 			{
 				reoccurrenceBoost = KeyPressInterval - KeyPressInterval / 10;
 			}
-			else 
+			else
 			{
 				reoccurrenceBoost = reocurrenceCount * KeyPressInterval / 10;
 			}

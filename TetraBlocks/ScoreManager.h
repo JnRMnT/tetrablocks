@@ -1,6 +1,7 @@
 #pragma once
 #include <SDL.h>
 #include "LTexture.h"
+#include "Player.h"
 
 class ScoreManager
 {

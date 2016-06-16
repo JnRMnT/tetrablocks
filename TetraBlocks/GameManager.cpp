@@ -112,12 +112,12 @@ void GameManager::AddScore(int score)
 void GameManager::Render(SDL_Renderer* gRenderer, LTexture* textTexture)
 {
 	//Draw Game Related GUIs
-	int guiStartOffset = SCREEN_HEIGHT / grid_height * (grid_width + 1);
-	int topOffset = SCREEN_HEIGHT / 20;
+	int guiStartOffset = Player::ScreenHeight / grid_height * (grid_width + 1);
+	int topOffset = Player::ScreenHeight / 20;
 
-	int scoreboardHeight = SCREEN_HEIGHT / 20;
+	int scoreboardHeight = Player::ScreenHeight / 20;
 
-	SDL_Rect draw_rect = { guiStartOffset, topOffset, SCREEN_WIDTH / 8, SCREEN_WIDTH / 8 + scoreboardHeight };
+	SDL_Rect draw_rect = { guiStartOffset, topOffset, Player::ScreenWidth / 12, Player::ScreenWidth / 12 + scoreboardHeight };
 	SDL_SetRenderDrawColor(gRenderer, GRID_BORDER_COLOR[0], GRID_BORDER_COLOR[1], GRID_BORDER_COLOR[2], GRID_BORDER_COLOR[3]);
 	SDL_RenderDrawRect(gRenderer, &draw_rect);
 
@@ -137,7 +137,7 @@ void GameManager::RenderUpcomingBlock(SDL_Renderer* gRenderer, int guiStartOffse
 	int offsetY = topOffset + scoreboardHeight;
 	int initialOffsetX = offsetX;
 	int initialOffsetY = offsetY;
-	int cellSize = SCREEN_WIDTH / 8 / 4;
+	int cellSize = Player::ScreenWidth / 12 / 4;
 
 	SDL_Rect draw_rect = { offsetX, offsetY, cellSize, cellSize };
 	Uint8* filledColor = RenderingHelper::GetRenderingColor((CellStatus)(int)nextBlockType);
