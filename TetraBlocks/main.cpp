@@ -25,9 +25,6 @@ SDL_Window* gWindow = NULL;
 //The window renderer
 SDL_Renderer* gRenderer = NULL;
 
-//Current displayed texture
-SDL_Texture* gTexture = NULL;
-
 //TrueType Font
 TTF_Font *gFont = NULL;
 
@@ -68,6 +65,10 @@ bool init()
 		else
 		{
 			SDL_SetWindowMinimumSize(gWindow, MIN_SCREEN_WIDTH, MIN_SCREEN_HEIGHT);
+
+			SDL_Surface* iconSurface = IMG_Load("Resources\\Icon.ico");
+			SDL_SetWindowIcon(gWindow, iconSurface);
+
 			//Create renderer for window
 			gRenderer = SDL_CreateRenderer(gWindow, -1, SDL_RENDERER_ACCELERATED);
 			if (gRenderer == NULL)
@@ -203,11 +204,11 @@ int main(int argc, char* args[])
 						InputHandler::HandleInput(e, player, gFont, gTextTexture);
 					}
 				}
-				
+
 				//Clear screen
 				SDL_SetRenderDrawColor(gRenderer, 0xFF, 0xFF, 0xFF, 0xFF);
 				SDL_RenderClear(gRenderer);
-				
+
 				gameManager->GetGridInstance()->Render(gRenderer);
 				gameManager->Render(gRenderer, gTextTexture);
 

@@ -139,6 +139,7 @@
     <ClInclude Include="main.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="RenderingHelper.h" />
+    <ClInclude Include="resource.h" />
     <ClInclude Include="RotationHelper.h" />
     <ClInclude Include="IntervalHandler.h" />
     <ClInclude Include="ScoreManager.h" />
@@ -180,6 +181,15 @@
   </ItemGroup>
   <ItemGroup>
     <Font Include="Resources\Square.ttf" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="TetraBlocks.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="Resources\Icon.ico">
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</DeploymentContent>
+    </Image>
+    <Image Include="Resources\Icon.png" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
