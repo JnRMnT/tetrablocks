@@ -16,6 +16,7 @@ Block::~Block()
 {
 }
 
+//Moves the block to given direction
 bool Block::Move(Direction movement)
 {
 	int newCenterX = this->center_x;
@@ -91,6 +92,7 @@ bool Block::Move(Direction movement)
 	}
 }
 
+//Check if the block can move to given position
 bool Block::CanMove(int x, int y, Uint16 previousState)
 {
 	if (grid->IsInBounds(x, y, state) && !HasCollision(grid->GetPartialStatus(y, x, previousState, true)))
@@ -103,11 +105,13 @@ bool Block::CanMove(int x, int y, Uint16 previousState)
 	}
 }
 
+//Checks the grid if it collides with the current state
 bool Block::HasCollision(Uint16 gridState)
 {
 	return ((gridState & state) != 0);
 }
 
+//Rotates the block
 void Block::Rotate(Direction direction)
 {
 	Uint16 nextState;
@@ -127,6 +131,7 @@ void Block::Rotate(Direction direction)
 	}
 }
 
+//Gets the CellStatus equivalent of the block
 CellStatus Block::GetStatusEquivalent()
 {
 	return (CellStatus)(int)this->type;

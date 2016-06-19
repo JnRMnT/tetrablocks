@@ -84,7 +84,7 @@ BlockType GameManager::GetNextBlockType()
 void GameManager::SpawnNewBlock()
 {
 	int retryCount = 0;
-	player->ActiveBlock = new Block(5, 10, nextBlockType, player->rotationHelper, grid);
+	player->ActiveBlock = new Block(grid_width / 2, -2, nextBlockType, player->rotationHelper, grid);
 
 	grid->AddBlock(player->ActiveBlock);
 	nextBlockType = GetNextBlockType();

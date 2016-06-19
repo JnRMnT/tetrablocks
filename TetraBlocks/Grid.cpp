@@ -27,7 +27,7 @@ Grid::~Grid()
 	}
 }
 
-
+//Adds the block to the grid
 void Grid::AddBlock(Block* block)
 {
 	CellStatus status = block->GetStatusEquivalent();
@@ -39,14 +39,17 @@ void Grid::AddBlock(Block* block)
 		for (int j = 0; j < 4; j++)
 		{
 			int bit_pos = 15 - (i * 4 + j);
-			if (stateBitSet.test(bit_pos))
+			int gridX = block->GetCenterX() + j;
+			int gridY = block->GetCenterY() + i;
+			if (stateBitSet.test(bit_pos) && gridX >= 0 && gridX < grid_width && gridY >= 0 && gridY < grid_height)
 			{
-				this->grid[block->GetCenterY() + i][block->GetCenterX() + j]->SetStatus(status);
+				this->grid[gridY][gridX]->SetStatus(status);
 			}
 		}
 	}
 }
 
+//Updates the block to its new position and state
 void Grid::UpdateBlock(int i, int j, Uint16 nextGridState, Uint16 currentGridState, int nextI, int nextJ, Uint16 currentState, Uint16 nextState, Block* block)
 {
 	std::bitset<16> nextGridSet = std::bitset<16>(nextGridState);
@@ -109,13 +112,17 @@ void Grid::UpdateBlock(int i, int j, Uint16 nextGridState, Uint16 currentGridSta
 	}
 }
 
+//Ensures the grid doesn't leave any filled cells when block moves
 void Grid::CheckStateAndEmptyCells(std::bitset<16> state, int y, int x, int bitToCheck)
 {
 	if (state.test(bitToCheck))
 	{
 		int i = (15 - bitToCheck) / 4;
 		int j = (15 - bitToCheck) % 4;
-		this->grid[y + i][x + j]->SetStatus(Empty);
+		if (y + i >= 0 && y + i < grid_height && x + j >= 0 && x + j < grid_width)
+		{
+			this->grid[y + i][x + j]->SetStatus(Empty);
+		}
 	}
 }
 
@@ -147,6 +154,7 @@ void Grid::CheckRows()
 	}
 }
 
+//Clears a row
 void Grid::ClearRow(int row)
 {
 	for (int i = row; i >= 0; i--)
@@ -167,6 +175,7 @@ void Grid::ClearRow(int row)
 	}
 }
 
+//Gets the empty/filled status of the cells of the grid at given position excluding the active block
 Uint16 Grid::GetPartialStatus(int i, int j, Uint16 currentState, bool isMovement)
 {
 	std::bitset<16> currentBitSet(currentState);
@@ -227,6 +236,7 @@ void Grid::Render(SDL_Renderer* gRenderer)
 	}
 }
 
+//Checks the block if it is in the grid or not, starting blocks are excluded
 bool Grid::IsInBounds(int x, int y, Uint16 testState)
 {
 	std::bitset<16> stateBitSet = std::bitset<16>(testState);
@@ -241,7 +251,7 @@ bool Grid::IsInBounds(int x, int y, Uint16 testState)
 				int currentY = y + i;
 				inBounds = inBounds &&
 					currentX >= 0 && currentX < grid_width &&
-					currentY >= 0 && currentY < grid_height;
+					currentY < grid_height;
 			}
 		}
 	}
@@ -249,6 +259,7 @@ bool Grid::IsInBounds(int x, int y, Uint16 testState)
 	return inBounds;
 }
 
+//Checks the cell at given position if it is filled or not
 bool Grid::IsOccupied(int i, int j)
 {
 	return this->grid[i][j]->GetStatus() != Empty;
