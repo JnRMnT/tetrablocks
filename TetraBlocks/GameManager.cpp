@@ -83,11 +83,27 @@ BlockType GameManager::GetNextBlockType()
 
 void GameManager::SpawnNewBlock()
 {
-	int retryCount = 0;
-	player->ActiveBlock = new Block(grid_width / 2, -2, nextBlockType, player->rotationHelper, grid);
+	player->ActiveBlock = new Block(grid_width / 2 - 1, -8, nextBlockType, player->rotationHelper, grid);
 
 	grid->AddBlock(player->ActiveBlock);
-	nextBlockType = GetNextBlockType();
+	bool canMove = true;
+	int i = 0;
+	while (i < 6 && canMove)
+	{
+		canMove = player->ActiveBlock->Move(Down);
+		i++;
+	}
+
+	if (canMove)
+	{
+		nextBlockType = GetNextBlockType();
+	}
+	else
+	{
+		//Game Over!
+		player->ActiveBlock = nullptr;
+		state = GameOver;
+	}
 }
 
 void GameManager::MoveActiveBlock()

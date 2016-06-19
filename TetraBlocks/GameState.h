@@ -1,5 +1,6 @@
 #pragma once
 enum GameState {
 	Paused,
-	Playing
+	Playing,
+	GameOver
 };
